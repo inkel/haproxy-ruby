@@ -6,6 +6,7 @@ module HAProxy
   class SocketReader < HAProxy::StatsReader
 
     def initialize(path)
+      raise ArgumentError, "Socket #{path} doesn't exists or is not a UNIX socket" unless File.exists?(path) and File.socket?(path)
       @path = path
     end
 
@@ -48,7 +49,7 @@ module HAProxy
 
       params[:proxy] = "-1" if params[:proxy].eql?(:all)
       params[:server] = "-1" if params[:server].eql?(:all)
-      
+
       types = [types] unless types.is_a?(Array)
 
       params[:type] = case
