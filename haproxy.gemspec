@@ -4,13 +4,13 @@ require "haproxy/version"
 
 Gem::Specification.new do |s|
   s.name        = "haproxy"
-  s.version     = Haproxy::VERSION
+  s.version     = HAProxy::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Leandro López (inkel)"]
   s.email       = ["inkel.ar@gmail.com"]
   s.homepage    = "https://github.com/inkel/haproxy-ruby"
-  s.summary     = %q{HAProxy interface for reading statistics or managing servers (requires HAProxy 1.4+)}
-  s.description = %q{This gem is intended for use as a HAProxy interface when you need to read statistics or if you like to manage proxies thru Ruby}
+  s.summary     = 'HAProxy interface for reading statistics or managing servers (requires HAProxy 1.4+)'
+  s.description = 'This gem is intended for use as a HAProxy interface when you need to read statistics or if you like to manage proxies thru Ruby'
 
   s.rubyforge_project = "haproxy"
 
