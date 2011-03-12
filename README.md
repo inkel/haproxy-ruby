@@ -1,3 +1,7 @@
+# WARNING ABOUT v0.0.2
+
+I did a stupid trick for testing and as all stupid tricks it ended bad, so if you run the specs you'll end up with your system clutter with zombies spec process.
+
 # HAProxy RubyGem
 
 This gem aims to provide an interface to query HAProxy for statistics,
