@@ -16,22 +16,18 @@ module HAProxy
         path = self.temp_file_path
 
         UNIXServer.open(path) do |socket|
-
-          Thread.abort_on_exception = true
-
-          Process.fork do
-            # print "#{self} awaiting for connections in #{path}\n"
+          pid = Process.fork do
             client = socket.accept
-            # print "#{client} connected\n"
             cmd, data = client.recvfrom(1024)
             cmd.chomp!
-            # print "#{self} received '#{cmd}' from #{client}/#{data}\n"
             client.send self.send(action || :unknown), 0
             client.close
-            # print "#{self} closing\n"
+            exit
           end
 
           block.call(path)
+
+          Process.kill "TERM", pid rescue nil
         end
       end
 

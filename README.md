@@ -1,7 +1,3 @@
-# WARNING ABOUT v0.0.2
-
-I did a stupid trick for testing and as all stupid tricks it ended bad, so if you run the specs you'll end up with your system clutter with zombies spec process.
-
 # HAProxy RubyGem
 
 This gem aims to provide an interface to query HAProxy for statistics,
@@ -25,11 +21,11 @@ TCP/HTTP Load Balancer_.
     #! /usr/bin/env ruby
     require 'haproxy'
     require 'pp'
-    
+
     haproxy = HAProxy.read_stats '/path/to/haproxy.stats.socket'
-    
+
     pp haproxy.info
-    
+
     # {:name=>"HAProxy",
     #  :version=>"1.3.22",
     #  :release_date=>"2009/10/14",
@@ -50,9 +46,9 @@ TCP/HTTP Load Balancer_.
     #  :run_queue=>"1",
     #  :node=>"roke",
     #  :"description:"=>nil}
-    
+
     pp haproxy.stats
-    
+
     # [{:pxname=>"app1",
     #   :svname=>"thin1",
     #   :qcur=>"0",
@@ -94,7 +90,7 @@ TCP/HTTP Load Balancer_.
 
     global
     	stats socket haproxy
-    
+
     defaults
     	mode	http
     	option httplog
@@ -106,20 +102,20 @@ TCP/HTTP Load Balancer_.
     	clitimeout	50000
     	srvtimeout	50000
       stats uri /haproxy
-    
+
     listen app1 0.0.0.0:10000
     	balance	roundrobin
-    
+
       server thin1 127.0.0.1:10001
       server thin1 127.0.0.1:10002
       server thin1 127.0.0.1:10003
       server thin1 127.0.0.1:10004
       server thin1 127.0.0.1:10005
-    
+
     frontend app2
       bind 0.0.0.0:10011
       default_backend app2
-    
+
     backend app2
       balance roundrobin
       server thin1 127.0.0.1:10006
