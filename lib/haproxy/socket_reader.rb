@@ -84,7 +84,7 @@ module HAProxy
 
     def send_cmd(cmd, &block)
       socket = UNIXSocket.new(@path)
-      socket.puts(cmd)
+      socket.write(cmd + ';')
       socket.each do |line|
         yield(line.strip)
       end
