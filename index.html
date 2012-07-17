@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Haproxy-ruby by inkel</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Haproxy-ruby</h1>
+        <p>Ruby gem for interfacing with HAProxy</p>
+
+        <p class="view"><a href="https://github.com/inkel/haproxy-ruby">View the Project on GitHub <small>inkel/haproxy-ruby</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/inkel/haproxy-ruby/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/inkel/haproxy-ruby/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/inkel/haproxy-ruby">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>HAProxy RubyGem</h1>
+
+<p>This gem aims to provide an interface to query HAProxy for statistics,
+and eventually management through the sockets API.</p>
+
+<h2>What's HAProxy?</h2>
+
+<p><a href="http://haproxy.1wt.eu/">HAProxy</a> is the <em>Reliable, High Performance
+TCP/HTTP Load Balancer</em>.</p>
+
+<h2>Why this gem?</h2>
+
+<ul>
+<li>I use HAProxy at my work.</li>
+<li>I wanted to know how to create gems.</li>
+<li>I wanted to contribute with OSS.</li>
+<li>Why not?</li>
+<li>All of the above.</li>
+</ul><h2>Example of use</h2>
+
+<pre><code>#! /usr/bin/env ruby
+require 'haproxy'
+require 'pp'
+
+haproxy = HAProxy.read_stats '/path/to/haproxy.stats.socket'
+
+pp haproxy.info
+
+# {:name=&gt;"HAProxy",
+#  :version=&gt;"1.3.22",
+#  :release_date=&gt;"2009/10/14",
+#  :nbproc=&gt;"1",
+#  :process_num=&gt;"1",
+#  :pid=&gt;"10222",
+#  :uptime=&gt;"0d 0h33m12s",
+#  :uptime_sec=&gt;"1992",
+#  :memmax_mb=&gt;"0",
+#  :ulimit_n=&gt;"4013",
+#  :maxsock=&gt;"4013",
+#  :maxconn=&gt;"2000",
+#  :maxpipes=&gt;"0",
+#  :currconns=&gt;"1",
+#  :pipesused=&gt;"0",
+#  :pipesfree=&gt;"0",
+#  :tasks=&gt;"1",
+#  :run_queue=&gt;"1",
+#  :node=&gt;"roke",
+#  :"description:"=&gt;nil}
+
+pp haproxy.stats
+
+# [{:pxname=&gt;"app1",
+#   :svname=&gt;"thin1",
+#   :qcur=&gt;"0",
+#   :qmax=&gt;"0",
+#   :scur=&gt;"0",
+#   :smax=&gt;"0",
+#   :slim=&gt;"",
+#   :stot=&gt;"0",
+#   :bin=&gt;"0",
+#   :bout=&gt;"0",
+#   :dreq=&gt;"",
+#   :dresp=&gt;"0",
+#   :ereq=&gt;"",
+#   :econ=&gt;"0",
+#   :eresp=&gt;"0",
+#   :wretr=&gt;"0",
+#   :wredis=&gt;"0",
+#   :status=&gt;"no check",
+#   :weight=&gt;"1",
+#   :act=&gt;"1",
+#   :bck=&gt;"0",
+#   :chkfail=&gt;"",
+#   :chkdown=&gt;"",
+#   :lastchg=&gt;"",
+#   :downtime=&gt;"",
+#   :qlimit=&gt;"",
+#   :pid=&gt;"1",
+#   :iid=&gt;"1",
+#   :sid=&gt;"1",
+#   :throttle=&gt;"",
+#   :lbtot=&gt;"0",
+#   :tracked=&gt;"",
+#   :type=&gt;"2",
+#   :rate=&gt;"0",
+#   :rate_lim=&gt;"",
+#   :rate_max=&gt;"0"},...]
+</code></pre>
+
+<h4>HAProxy sample configuration</h4>
+
+<pre><code>global
+    stats socket haproxy
+
+defaults
+    mode    http
+    option httplog
+  option httpclose
+    retries 3
+    option redispatch
+    maxconn 2000
+    contimeout  5000
+    clitimeout  50000
+    srvtimeout  50000
+  stats uri /haproxy
+
+listen app1 0.0.0.0:10000
+    balance roundrobin
+
+  server thin1 127.0.0.1:10001
+  server thin1 127.0.0.1:10002
+  server thin1 127.0.0.1:10003
+  server thin1 127.0.0.1:10004
+  server thin1 127.0.0.1:10005
+
+frontend app2
+  bind 0.0.0.0:10011
+  default_backend app2
+
+backend app2
+  balance roundrobin
+  server thin1 127.0.0.1:10006
+  server thin1 127.0.0.1:10007
+  server thin1 127.0.0.1:10008
+  server thin1 127.0.0.1:10009
+  server thin1 127.0.0.1:10010
+</code></pre>
+
+<h2>Roadmap</h2>
+
+<ul>
+<li>Improve documentation</li>
+<li>Improve CSV parsing</li>
+<li>Add tests</li>
+<li>Add examples</li>
+<li>Read stats from HTTP and CSV files</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/inkel">inkel</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
