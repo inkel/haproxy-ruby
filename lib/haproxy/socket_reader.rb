@@ -86,6 +86,7 @@ module HAProxy
       socket = UNIXSocket.new(@path)
       socket.write(cmd + ';')
       socket.each do |line|
+	next if line.chomp.empty?
         yield(line.strip)
       end
     end
