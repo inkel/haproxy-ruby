@@ -68,6 +68,16 @@ module HAProxy
       end
     end
 
+    def disable(backend, server)
+      cmd = "disable server #{backend}/#{server}"
+      send_cmd(cmd)
+    end
+
+    def enable(backend, server)
+      cmd = "enable server #{backend}/#{server}"
+      send_cmd(cmd)
+    end
+
     def frontends
       stats :frontend, :proxy => :all, :server => :all
     end
@@ -86,7 +96,7 @@ module HAProxy
       socket = UNIXSocket.new(@path)
       socket.write(cmd + ';')
       socket.each do |line|
-	next if line.chomp.empty?
+        next if line.chomp.empty?
         yield(line.strip)
       end
     end
