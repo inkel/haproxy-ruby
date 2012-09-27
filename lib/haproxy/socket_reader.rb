@@ -68,6 +68,16 @@ module HAProxy
       end
     end
 
+    def disable(backend, server)
+      cmd = "disable server #{backend}/#{server}"
+      send_cmd(cmd)
+    end
+
+    def enable(backend, server)
+      cmd = "enable server #{backend}/#{server}"
+      send_cmd(cmd)
+    end
+
     def frontends
       stats :frontend, :proxy => :all, :server => :all
     end
