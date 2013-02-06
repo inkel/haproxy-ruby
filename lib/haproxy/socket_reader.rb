@@ -60,7 +60,6 @@ module HAProxy
                       end
 
       cmd = "show stat #{params[:proxy]} #{params[:type]} #{params[:server]}"
-
       returning([]) do |stats|
         send_cmd(cmd) do |line|
           stats << CSVParser.parse(line) unless line.start_with?('#')
@@ -83,7 +82,7 @@ module HAProxy
     end
 
     def backends
-      stats :frontend, :proxy => :all, :server => :all
+      stats :backend, :proxy => :all, :server => :all
     end
 
     def servers
