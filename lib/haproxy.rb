@@ -10,6 +10,7 @@ module HAProxy
 
   def self.read_stats(*from)
     if from.length == 1
+      from = from[0]
       uri = URI.parse(from)
 
       if uri.is_a?(URI::Generic) and File.socket?(uri.path)

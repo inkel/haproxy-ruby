@@ -7,17 +7,13 @@ module HAProxy
 
     def initialize(*args)
       if args.length == 1
-        path = args
+        path = args[0]
         raise ArgumentError, "Socket #{path} doesn't exists or is not a UNIX socket" unless File.exists?(path) and File.socket?(path)
         @path = path
       elsif args.length == 2
         @host = args[0]
         @port = args[1]
       end
-
-      puts "path: #{@path}"
-      puts "host: #{@host}:#{@port}"
-
     end
 
     def info
