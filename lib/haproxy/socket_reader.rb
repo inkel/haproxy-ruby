@@ -5,9 +5,19 @@ require 'haproxy/csv_parser'
 module HAProxy
   class SocketReader < HAProxy::StatsReader
 
-    def initialize(path)
-      raise ArgumentError, "Socket #{path} doesn't exists or is not a UNIX socket" unless File.exists?(path) and File.socket?(path)
-      @path = path
+    def initialize(*args)
+      if args.length == 1
+        path = args
+        raise ArgumentError, "Socket #{path} doesn't exists or is not a UNIX socket" unless File.exists?(path) and File.socket?(path)
+        @path = path
+      elsif args.length == 2
+        @host = args[0]
+        @port = args[1]
+      end
+
+      puts "path: #{@path}"
+      puts "host: #{@host}:#{@port}"
+
     end
 
     def info
@@ -92,12 +102,19 @@ module HAProxy
     protected
 
     def send_cmd(cmd, &block)
-      socket = UNIXSocket.new(@path)
+      if @path
+        socket = UNIXSocket.new(@path)
+      else
+        socket = TCPSocket.new(@host, @port)
+      end
+
       socket.write(cmd + ';')
       socket.each do |line|
         next if line.chomp.empty?
         yield(line.strip)
       end
+
+      socket.close unless @path
     end
 
   end

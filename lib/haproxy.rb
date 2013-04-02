@@ -8,13 +8,19 @@ end
 
 module HAProxy
 
-  def self.read_stats(from)
-    uri = URI.parse(from)
+  def self.read_stats(*from)
+    if from.length == 1
+      uri = URI.parse(from)
 
-    if uri.is_a?(URI::Generic) and File.socket?(uri.path)
-      HAProxy::SocketReader.new(uri.path)
+      if uri.is_a?(URI::Generic) and File.socket?(uri.path)
+        HAProxy::SocketReader.new(uri.path)
+      else
+        raise NotImplementedError, "Invalid socket path provided."
+      end
+    elsif from.length == 2
+      HAProxy::SocketReader.new(from[0], from[1])
     else
-      raise NotImplementedError, "Currently only sockets are implemented"
+      raise NotImplementedError, "Only UNIX Sockets and host/port combinations are supported"
     end
   end
 
