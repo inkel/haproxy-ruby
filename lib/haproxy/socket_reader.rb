@@ -92,11 +92,12 @@ module HAProxy
     protected
 
     def send_cmd(cmd, &block)
-      socket = UNIXSocket.new(@path)
-      socket.write(cmd + ';')
-      socket.each do |line|
-        next if line.chomp.empty?
-        yield(line.strip)
+      UNIXSocket.open(@path) do |socket|
+        socket.write(cmd + ';')
+        socket.each do |line|
+          next if line.chomp.empty?
+          yield(line.strip)
+        end
       end
     end
 
