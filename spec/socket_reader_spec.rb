@@ -10,10 +10,9 @@ describe HAProxy::SocketReader do
   end
 
   it "should fail without an existing socket file" do
-    Tempfile.new('invalid-file') do |file|
-      file.path.should_not be_socket
-      HAProxy::SocketReader.new(file.path).should_raise ArgumentError
-    end.close!
+    Tempfile.open('invalid-file') do |file|
+      expect { HAProxy::SocketReader.new(file.path) }.to raise_error ArgumentError
+    end
   end
 
   it "should return a Hash with proxy information" do
